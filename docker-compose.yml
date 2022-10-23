@@ -1,0 +1,42 @@
+version: '3.1'
+
+services:
+
+  wordpress:
+    image: wordpress
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: arya
+      WORDPRESS_DB_PASSWORD: arya
+      WORDPRESS_DB_NAME: wp
+    volumes:
+      - wordpress:/var/www/html
+
+  db:
+    image: mariadb:latest
+    restart: always
+    environment:
+      MYSQL_DATABASE: wp
+      MYSQL_USER: arya
+      MYSQL_PASSWORD: arya
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - db:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 8081:80
+    links:
+      - db
+    environment:
+      - PMA_ARBITRARY=1  
+      - PMA_HOST=db
+
+volumes:
+  wordpress:
+  db:
